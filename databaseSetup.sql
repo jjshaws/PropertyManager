@@ -8,37 +8,37 @@ CREATE TABLE Account (
 
 CREATE TABLE Property_Manager ( 
     userId: char(10), 
-    password: char(20),
-    propertyManagerName: char(30), 
-    propertyManagerEmail: char(30), 
+    password: varchar(20),
+    propertyManagerName: varchar(30), 
+    propertyManagerEmail: varchar(30), 
     PRIMARY KEY (userId), 
     UNIQUE(propertyManagerEmail)
 )
 
 CREATE TABLE Service_Worker ( 
-    serviceWorkerEmail: char(30), 
-    serviceWorkerName: char(30), 
-    serviceType: char(20), 
+    serviceWorkerEmail: varchar(30), 
+    serviceWorkerName: varchar(30), 
+    serviceType: varchar(20), 
     PRIMARY KEY (email)
 )
 
 CREATE TABLE Service_Details ( 
-    serviceType: char(20), 
+    serviceType: varchar(20), 
     rate: int NOT NULL,
     PRIMARY KEY (serviceType)
     FOREIGN KEY (serviceType) REFERENCES Service_Worker,
 )
 
 CREATE TABLE Services (
-    serviceWorkerEmail: char(30),
-    address: char(30),
+    serviceWorkerEmail: varchar(30),
+    address: varchar(30),
     PRIMARY KEY (serviceWorkerEmail, address),
     FOREIGN KEY (serviceWorkerEmail) REFERENCES Service_Worker,
     FOREIGN KEY (address) REFERENCES Property
 )
 
 CREATE TABLE Property (
-    address: char(30),
+    address: varchar(30),
     customerId: char(10) NOT NULL,
     propertyType: int,
     PRIMARY KEY (address),
@@ -47,7 +47,7 @@ CREATE TABLE Property (
 
 CREATE TABLE Landlord (
     customerId: char(10),
-    landlordEmail: char(30),
+    landlordEmail: varchar(30),
     userId: char(10) NOT NULL,
     PRIMARY KEY (customerId),
     FOREIGN KEY (userId) REFERENCES Property_Manager,
@@ -56,7 +56,7 @@ CREATE TABLE Landlord (
 
 CREATE TABLE Roommates_With_Tenant (
     tenantId: char(10),
-    roommateName: char(30),
+    roommateName: varchar(30),
     PRIMARY KEY (tenantId, roommateName),
     FOREIGN KEY (tenantId) REFERENCES Tenant
     ON DELETE CASCADE
@@ -64,8 +64,8 @@ CREATE TABLE Roommates_With_Tenant (
 
 CREATE TABLE Tenant (
     tenantId: char(10),
-    tenantName: char(30),
-    tenantEmail: char(30),
+    tenantName: varchar(30),
+    tenantEmail: varchar(30),
     PRIMARY KEY (tenantId)
 )
 
@@ -76,7 +76,7 @@ CREATE TABLE Lease (
     rentCost: int NOT NULL,
     deposit: int,
     userId: char(10) NOT NULL,
-    address: char(30) NOT NULL,
+    address: varchar(30) NOT NULL,
     tenantId: char(10) NOT NULL,
     PRIMARY KEY (leaseId),
     FOREIGN KEY (userId) REFERENCES Property_Manager,
@@ -87,7 +87,7 @@ CREATE TABLE Lease (
 
 CREATE TABLE Lease_Increase ( 
     rentCost: int, 
-    address: char(30),
+    address: varchar(30),
     maxAnnualRentIncrease: int NOT NULL, 
     PRIMARY KEY (rentCost, address), 
     FOREIGN KEY (address) REFERENCES Property
