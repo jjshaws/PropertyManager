@@ -93,8 +93,6 @@ CREATE TABLE Lease_Increase (
     FOREIGN KEY (address) REFERENCES Property
 );
 
--- TODO: populate the tables
-
 INSERT INTO Account VALUES ("abcdefghij", -5000, "bcdefghijk");
 INSERT INTO Account VALUES ("bcdefghija", 300, "cdefghijkb");
 INSERT INTO Account VALUES ("cdefghijab", 150000, "defghijkbc");
@@ -131,3 +129,32 @@ INSERT INTO Property VALUES ("375 W 5th Ave, Vancouver, BC V5Y 1J6", "efghijklcd
 INSERT INTO Property VALUES ("3515 26 St NE, Calgary, AB T1Y 7E3", "efghijkbcd", 0);
 INSERT INTO Property VALUES ("2335 Pegasus Rd NE, Calgary, AB T2E 8C3", "fghijkbcde", 1);
 
+INSERT INTO Landlord VALUES ("bcdefghijk", "john@property.com", "cdefghijkl");
+INSERT INTO Landlord VALUES ("cdefghijkb", "david@realestate.ca", "defghijklc");
+INSERT INTO Landlord VALUES ("defghijkbc", "robert@gmail.com", "efghijklcd");
+INSERT INTO Landlord VALUES ("efghijkbcd", "michael@realestateinvestor.org", "fghijklcde");
+INSERT INTO Landlord VALUES ("fghijkbcde", "landlordpaul@aol.ca", "ghijklcdef");
+
+INSERT INTO Roommates_With_Tenant VALUES ("mnopqrstuv", "Brandon");
+INSERT INTO Roommates_With_Tenant VALUES ("mnopqrstuv", "Broderick");
+INSERT INTO Roommates_With_Tenant VALUES ("mnopqrstuv", "Blake");
+INSERT INTO Roommates_With_Tenant VALUES ("pqrstuvmno", "Bartholemew");
+INSERT INTO Roommates_With_Tenant VALUES ("qrstuvmnop", "Betty");
+
+INSERT INTO Tenant VALUES ("mnopqrstuv", "Christian", "christian@gmail.com");
+INSERT INTO Tenant VALUES ("nopqrstuvm", "Caleb", "caleb@yahoo.ca");
+INSERT INTO Tenant VALUES ("opqrstuvmn", "Cornelius", "cornelius@gmail.com");
+INSERT INTO Tenant VALUES ("pqrstuvmno", "Kristaps", "kristaps@gmail.com");
+INSERT INTO Tenant VALUES ("qrstuvmnop", "Clayton", "clayton@hotmail.com");
+
+INSERT INTO Lease VALUES ("qrstuvwxyz", TO_DATE('01/01/2022', 'DD/MM/YYYY'), 12, 2200, 2200, "cdefghijkl", "1220 Homer St, Vancouver, BC V6B 2Y5", "mnopqrstuv");
+INSERT INTO Lease VALUES ("rstuvwxyzq", TO_DATE('07/05/2021', 'DD/MM/YYYY'), 12, 2100, 4200, "defghijklc", "1666 W 75th Ave, Vancouver, BC V6P 6G2", "nopqrstuvm");
+INSERT INTO Lease VALUES ("stuvwxyzqr", TO_DATE('04/01/2021', 'DD/MM/YYYY'), 12, 800, 1600, "efghijklcd", "375 W 5th Ave, Vancouver, BC V5Y 1J6", "opqrstuvmn");
+INSERT INTO Lease VALUES ("tuvwxyzqrs", TO_DATE('01/30/2022', 'DD/MM/YYYY'), 1, 900, 900, "fghijklcde", "3515 26 St NE, Calgary, AB T1Y 7E3", "pqrstuvmno");
+INSERT INTO Lease VALUES ("uvwxyzqrst", TO_DATE('01/02/2022', 'DD/MM/YYYY'), 12, 1900, 3800, "ghijklcdef", "2335 Pegasus Rd NE, Calgary, AB T2E 8C3", "qrstuvmnop");
+
+INSERT INTO Lease_Increase VALUES(2200, "1220 Homer St, Vancouver, BC V6B 2Y5", 200);
+INSERT INTO Lease_Increase VALUES(2100, "1666 W 75th Ave, Vancouver, BC V6P 6G2", 100);
+INSERT INTO Lease_Increase VALUES(800, "375 W 5th Ave, Vancouver, BC V5Y 1J6", 50);
+INSERT INTO Lease_Increase VALUES(900, "3515 26 St NE, Calgary, AB T1Y 7E3", 75);
+INSERT INTO Lease_Increase VALUES(1900, "2335 Pegasus Rd NE, Calgary, AB T2E 8C3", 20);
