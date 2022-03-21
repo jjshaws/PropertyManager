@@ -100,7 +100,7 @@ CREATE TABLE Lease (
     PRIMARY KEY (leaseId),
     FOREIGN KEY (userId) REFERENCES Property_Manager,
     FOREIGN KEY (address) REFERENCES Property,
-    FOREIGN KEY (tenantId) REFERENCES Tenant, 
+    FOREIGN KEY (tenantId) REFERENCES Tenant ON DELETE CASCADE, 
     FOREIGN KEY (address, rentCost) REFERENCES Lease_Increase
 );
 
