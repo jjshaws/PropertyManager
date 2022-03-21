@@ -26,17 +26,29 @@
     </head>
 
     <body>
-        <h2>Delete Roommate</h2>
+        <h2>Evict Roommate</h2>
         <form method="POST" action="milestone-4.php">
             <input type="hidden" id="deleteQueryRequest" name="deleteQueryRequest">
             Tenant ID: <input type="text" name="tenantId">
             Roommate Name: <input type="text" name="roommateName">
-            <input type="submit" value="Delete" name="deleteSubmit">
+            <input type="submit" value="Evict" name="deleteSubmit">
         </form>
 
         <form method="GET" action="milestone-4.php">
             <input type="hidden" id="getRoommateDataRequest" name="getRoommateDataRequest">
             <input type="submit" name="getRoommateData" value="Display Roommate Data">
+        </form>
+
+        <h2>Evict Tenant</h2>
+        <form method="POST" action="milestone-4.php">
+            <input type="hidden" id="deleteTenantQueryRequest" name="deleteTenantQueryRequest">
+            Tenant ID: <input type="text" name="tenantId">
+            <input type="submit" value="Evict" name="deleteTenantSubmit">
+        </form>
+
+        <form method="GET" action="milestone-4.php">
+            <input type="hidden" id="getTenantAndRoommatesRequest" name="getTenantAndRoommatesRequest">
+            <input type="submit" name="getTenantAndRoommatesData" value="Display Tenant And Roommates">
         </form>
 
         <!-- <h2>Reset</h2>
@@ -212,13 +224,26 @@
             getRoommateData();
         }
 
+        function handleTenantDeleteRequest() {
+            global $db_conn;
+
+            $tenantId = $_POST['tenantId'];
+
+            executePlainSQL("DELETE FROM Tenant WHERE tenantId='" . $tenantId . "'");
+            
+            OCICommit($db_conn);
+
+            getTenantAndRoommatesData();
+
+        }
+
         function getRoommateData() {
             global $db_conn;
             $result = executePlainSQL("SELECT * FROM Roommates_With_Tenant");printRoommateDataResult($result);
         }
 
         function printRoommateDataResult($result) { //prints results from a select statement
-            echo "<br>Retrieved data from table demoTable:<br>";
+            echo "<br>Retrieved data from Roommates_With_Tenant table:<br>";
             echo "<table>";
             echo "<tr><th>tenantId</th><th>roommateName</th></tr>";
 
@@ -227,6 +252,29 @@
             }
 
             echo "</table>";
+        }
+
+        function getTenantData() {
+            global $db_conn;
+            $result = executePlainSQL("SELECT * FROM Tenant");
+            printTenantDataResult($result);
+        }
+
+        function printTenantDataResult($result) { //prints results from a select statement
+            echo "<br>Retrieved data from Tenant table:<br>";
+            echo "<table>";
+            echo "<tr><th>tenantId</th><th>tenantName</th><th>tenantEmail</th></tr>";
+
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] , "</td></tr>";
+            }
+
+            echo "</table>";
+        }
+
+        function getTenantAndRoommatesData() {
+            getTenantData();
+            getRoommateData();
         }
 
         // function handleResetRequest() {
@@ -320,6 +368,8 @@
             if (connectToDB()) {
                 if (array_key_exists('getRoommateData', $_GET)) {
                     getRoommateData();
+                } else if (array_key_exists('getTenantAndRoommatesData', $_GET)) {
+                    getTenantAndRoommatesData();
                 }
 
                 disconnectFromDB();
@@ -330,6 +380,9 @@
             if (connectToDB()) {
                 if (array_key_exists('deleteQueryRequest', $_POST)) {
                     handleDeleteRequest();
+                } 
+                else if (array_key_exists('deleteTenantQueryRequest', $_POST)) {
+                    handleTenantDeleteRequest();
                 }
 
                 disconnectFromDB();
@@ -338,7 +391,11 @@
 
         if (isset($_POST['deleteSubmit'])) {
             handlePOSTRequest();
+        } else if (isset($_POST['deleteTenantSubmit'])) {
+            handlePOSTRequest();
         } else if (isset($_GET['getRoommateDataRequest'])) {
+            handleGETRequest();
+        } else if (isset($_GET['getTenantAndRoommatesRequest'])) {
             handleGETRequest();
         }
 		?>
