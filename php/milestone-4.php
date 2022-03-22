@@ -16,7 +16,7 @@
   extension.  You must also change the username and password on the
   OCILogon below to be your ORACLE username and password -->
 
-<html>
+  <html>
     <head>
         <link rel='stylesheet' type='text/css' href='style.php' />
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,12 +51,21 @@
             <input type="submit" name="getTenantAndRoommatesData" value="Display Tenant And Roommates">
         </form>
 
-        <h2>Get Lowest Priced Units</h2>
-        <form method="POST" action="milestone-4.php">
-            <input type="hidden" id="getLowestPricedUnits" name="getLowestPricedUnits">
-            Latest Start Date: <input type="text" name="startDate">
-            <input type="submit" value="Find" name="getLowestPricedUnitsSubmit">
+        <h2>Get Lowest Priced Units By Housing Type</h2>
+        <form method="GET" action="milestone-4.php">
+            <input type="hidden" id="getLowestPricedUnitsRequest" name="getLowestPricedUnitsRequest">
+            <input type="submit" value="Show" name="getLowestPricedUnitsSubmit">
         </form>
+
+        <h2>Find Services</h2>
+        <form method="GET" action="milestone-4.php">
+            <input type="hidden" id="getServiceQueryRequest" name="getServiceQueryRequest">
+            Service Contains keyword: <input type="text" name="serviceKeyword">
+            Service rate is equal or less than: <input type="float" name="serviceMaxPrice">
+            <input type="submit" value="Submit" name="getServiceQuerySubmit">
+        </form>
+
+
 
         <!-- <h2>Reset</h2>
         <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
@@ -244,6 +253,20 @@
 
         }
 
+        function handleRequest() {
+            global $db_conn;
+
+            $tenantId = $_POST['tenantId'];
+
+            executePlainSQL("DELETE FROM Tenant WHERE tenantId='" . $tenantId . "'");
+            
+            OCICommit($db_conn);
+
+            getTenantAndRoommatesData();
+
+        }
+
+
         function getRoommateData() {
             global $db_conn;
             $result = executePlainSQL("SELECT * FROM Roommates_With_Tenant");printRoommateDataResult($result);
@@ -265,6 +288,47 @@
             global $db_conn;
             $result = executePlainSQL("SELECT * FROM Tenant");
             printTenantDataResult($result);
+        }
+
+        function getLowestPricedUnitsData() {
+            global $db_conn;
+            $result = executePlainSQL("SELECT propertyType, MIN(rentCost) FROM Property, Lease WHERE Property.address = Lease.address GROUP BY propertyType");
+            printLowestPricedUnitsResult($result);
+        }
+
+        function printLowestPricedUnitsResult($result) { //prints results from a select statement
+            echo "<br>Retrieved data from Property and Lease table:<br>";
+            echo "<table>";
+            echo "<tr><th>Property Type (0 is a Room, 1 is a Unit)</th><th>Least Expensive Room, in Dollars</th></tr>";
+
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>";
+            }
+
+            echo "</table>";
+        }
+
+        function getServiceQueryData() { //prints results from a select statement
+            global $db_conn;
+
+            $rate = $_GET['serviceMaxPrice'];
+            $service = $_GET['serviceKeyword'];
+
+            $result = executePlainSQL("SELECT Service_Details.serviceType, rate, serviceWorkerName, serviceWorkerEmail FROM Service_Details, Service_Worker WHERE Service_Details.serviceType = Service_worker.serviceType AND $rate >= rate AND (LOWER(Service_Details.serviceType) LIKE LOWER('%$service%'))");
+
+            getServiceQueryResult($result);
+        }
+
+        function getServiceQueryResult($result) { //prints results from a select statement
+            echo "<br>Retrieved data from Service_Details table:<br>";
+            echo "<table>";
+            echo "<tr><th>Service Type</th><th>Rate</th><th>Contact Name</th><th>Contact Email</th></tr>";
+
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] . "</td><td>" . $row[3] . "</td></tr>";
+            }
+
+            echo "</table>";
         }
 
         function printTenantDataResult($result) { //prints results from a select statement
@@ -377,6 +441,10 @@
                     getRoommateData();
                 } else if (array_key_exists('getTenantAndRoommatesData', $_GET)) {
                     getTenantAndRoommatesData();
+                } else if (array_key_exists('getLowestPricedUnitsRequest', $_GET)) {
+                    getLowestPricedUnitsData();
+                } else if (array_key_exists('getServiceQueryRequest', $_GET)) {
+                    getServiceQueryData();
                 }
 
                 disconnectFromDB();
@@ -403,6 +471,10 @@
         } else if (isset($_GET['getRoommateDataRequest'])) {
             handleGETRequest();
         } else if (isset($_GET['getTenantAndRoommatesRequest'])) {
+            handleGETRequest();
+        } else if (isset($_GET['getLowestPricedUnitsSubmit'])) {
+            handleGETRequest();
+        } else if (isset($_GET['getServiceQueryRequest'])) {
             handleGETRequest();
         }
 		?>
