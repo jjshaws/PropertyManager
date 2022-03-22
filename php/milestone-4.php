@@ -51,6 +51,13 @@
             <input type="submit" name="getTenantAndRoommatesData" value="Display Tenant And Roommates">
         </form>
 
+        <h2>Get Lowest Priced Units</h2>
+        <form method="POST" action="milestone-4.php">
+            <input type="hidden" id="getLowestPricedUnits" name="getLowestPricedUnits">
+            Latest Start Date: <input type="text" name="startDate">
+            <input type="submit" value="Find" name="getLowestPricedUnitsSubmit">
+        </form>
+
         <!-- <h2>Reset</h2>
         <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
 
