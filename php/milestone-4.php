@@ -299,10 +299,10 @@
         function printLowestPricedUnitsResult($result) { //prints results from a select statement
             echo "<br>Retrieved data from Property and Lease table:<br>";
             echo "<table>";
-            echo "<tr><th>Property Type (0 is a Room, 1 is a Unit)</th><th>Least Expensive Room, in Dollars</th></tr>";
+            echo "<tr><th>Property Type</th><th>Least Expensive Room, in Dollars</th></tr>";
 
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>";
+                echo "<tr><td>" . ($row[0] == 0 ? "Room" : "Unit") . "</td><td>" . $row[1] . "</td></tr>";
             }
 
             echo "</table>";
