@@ -76,8 +76,7 @@ CREATE TABLE Roommates_With_Tenant (
     tenantId CHAR(10),
     roommateName VARCHAR(30),
     PRIMARY KEY (tenantId, roommateName),
-    FOREIGN KEY (tenantId) REFERENCES Tenant
-    ON DELETE CASCADE
+    FOREIGN KEY (tenantId) REFERENCES Tenant ON DELETE CASCADE
 );
 
 CREATE TABLE Lease_Increase ( 

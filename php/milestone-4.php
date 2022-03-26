@@ -1,22 +1,4 @@
-<!--Test Oracle file for UBC CPSC304 2018 Winter Term 1
-  Created by Jiemin Zhang
-  Modified by Simona Radu
-  Modified by Jessica Wong (2018-06-22)
-  This file shows the very basics of how to execute PHP commands
-  on Oracle.
-  Specifically, it will drop a table, create a table, insert values
-  update values, and then query for values
-
-  IF YOU HAVE A TABLE CALLED "demoTable" IT WILL BE DESTROYED
-
-  The script assumes you already have a server set up
-  All OCI commands are commands to the Oracle libraries
-  To get the file to work, you must place it somewhere where your
-  Apache server can run it, and you must rename it to have a ".php"
-  extension.  You must also change the username and password on the
-  OCILogon below to be your ORACLE username and password -->
-
-  <html>
+<html>
     <head>
         <link rel='stylesheet' type='text/css' href='style.php' />
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,18 +8,26 @@
     </head>
 
     <body>
-        <h2>Evict Roommate</h2>
+        <h2>Find the Head Tenant For Each Roommate</h2>
+        <form method="GET" action="milestone-4.php">
+            <input type="hidden" id="tenantRoommateJoinRequest" name="tenantRoommateJoinRequest">
+            <input type="submit" value="Find" name="tenantRoommateJoinSubmit">
+        </form>
+
+        <!-- <h2>Evict Roommate</h2>
         <form method="POST" action="milestone-4.php">
             <input type="hidden" id="deleteQueryRequest" name="deleteQueryRequest">
             Tenant ID: <input type="text" name="tenantId">
             Roommate Name: <input type="text" name="roommateName">
             <input type="submit" value="Evict" name="deleteSubmit">
-        </form>
+        </form> -->
 
-        <form method="GET" action="milestone-4.php">
+        <!-- <form method="GET" action="milestone-4.php">
             <input type="hidden" id="getRoommateDataRequest" name="getRoommateDataRequest">
             <input type="submit" name="getRoommateData" value="Display Roommate Data">
-        </form>
+        </form> -->
+
+
 
         <h2>Evict Tenant</h2>
         <form method="POST" action="milestone-4.php">
@@ -46,9 +36,16 @@
             <input type="submit" value="Evict" name="deleteTenantSubmit">
         </form>
 
-        <form method="GET" action="milestone-4.php">
+        <!-- <form method="GET" action="milestone-4.php">
             <input type="hidden" id="getTenantAndRoommatesRequest" name="getTenantAndRoommatesRequest">
             <input type="submit" name="getTenantAndRoommatesData" value="Display Tenant And Roommates">
+        </form> -->
+
+        <h2>Get Landlord Contact Information</h2>
+        <form method="GET" action="milestone-4.php">
+            <input type="hidden" id="getLandlordContactInfoRequest" name="getLandlordContactInfoRequest">
+            Tenant ID: <input type="text" name="tenantIdKeyword">
+            <input type="submit" value="Show" name="getLandlordContactInfoSubmit">
         </form>
 
         <h2>Get Lowest Priced Units By Housing Type</h2>
@@ -65,53 +62,18 @@
             <input type="submit" value="Submit" name="getServiceQuerySubmit">
         </form>
 
-
-
-        <!-- <h2>Reset</h2>
-        <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
-
-        <form method="POST" action="oracle-test.php">
-            <input type="hidden" id="resetTablesRequest" name="resetTablesRequest">
-            <p><input type="submit" value="Reset" name="reset"></p>
+        <h2>Get Lease Field</h2>
+        <form method="GET" action="milestone-4.php">
+            <input type="hidden" id="getLeaseField" name="getLeaseFieldRequest">
+            <input type="radio" name="leaseFieldKeyword" value="startDate" checked> Start Date
+            <input type="radio" name="leaseFieldKeyword" value="leaseLength">Lease Length
+            <input type="radio" name="leaseFieldKeyword" value="rentCost">Rent Cost
+            <input type="radio" name="leaseFieldKeyword" value="deposit">Deposit
+            <input type="radio" name="leaseFieldKeyword" value="userId"> Property Manager ID
+            <input type="radio" name="leaseFieldKeyword" value="address">Address
+            <input type="radio" name="leaseFieldKeyword" value="tenantId">Tenant ID
+            <input type="submit" value="Submit" name="getLeaseFieldSubmit">
         </form>
-
-        <hr />
-
-        <h2>Insert Values into DemoTable</h2>
-        <form method="POST" action="oracle-test.php">
-            <input type="hidden" id="insertQueryRequest" name="insertQueryRequest">
-            Number: <input type="text" name="insNo"> <br /><br />
-            Name: <input type="text" name="insName"> <br /><br />
-
-            <input type="submit" value="Insert" name="insertSubmit"></p>
-        </form>
-
-        <hr />
-
-        <h2>Update Name in DemoTable</h2>
-        <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>
-
-        <form method="POST" action="oracle-test.php">
-            <input type="hidden" id="updateQueryRequest" name="updateQueryRequest">
-            Old Name: <input type="text" name="oldName"> <br /><br />
-            New Name: <input type="text" name="newName"> <br /><br />
-
-            <input type="submit" value="Update" name="updateSubmit"></p>
-        </form>
-
-        <hr />
-
-        <h2>Count the Tuples in DemoTable</h2>
-        <form method="GET" action="oracle-test.php">
-            <input type="hidden" id="countTupleRequest" name="countTupleRequest">
-            <input type="submit" name="countTuples"></p>
-        </form>
-
-        <h2>Display Data</h2>
-        <form method="GET" action="oracle-test.php">
-            <input type="hidden" id="getDataRequest" name="getDataRequest">
-            <input type="submit" name="getData">
-        </form> -->
 
 
 
@@ -145,7 +107,7 @@
             }
 
             $r = OCIExecute($statement, OCI_DEFAULT);
-            echo $r;
+            // echo $r;
             if (!$r) {
                 echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
                 $e = oci_error($statement); // For OCIExecute errors pass the statementhandle
@@ -216,17 +178,6 @@
             OCILogoff($db_conn);
         }
 
-        // function handleUpdateRequest() {
-        //     global $db_conn;
-
-        //     $old_name = $_POST['oldName'];
-        //     $new_name = $_POST['newName'];
-
-        //     // you need the wrap the old name and new name values with single quotations
-        //     executePlainSQL("UPDATE demoTable SET name='" . $new_name . "' WHERE name='" . $old_name . "'");
-        //     OCICommit($db_conn);
-        // }
-
         function handleDeleteRequest() {
             global $db_conn;
 
@@ -249,7 +200,7 @@
             
             OCICommit($db_conn);
 
-            getTenantAndRoommatesData();
+            // getTenantAndRoommatesData();
 
         }
 
@@ -266,16 +217,15 @@
 
         }
 
-
         function getRoommateData() {
             global $db_conn;
             $result = executePlainSQL("SELECT * FROM Roommates_With_Tenant");printRoommateDataResult($result);
         }
 
-        function printRoommateDataResult($result) { //prints results from a select statement
+        function printRoommateDataResult($result) {
             echo "<br>Retrieved data from Roommates_With_Tenant table:<br>";
             echo "<table>";
-            echo "<tr><th>tenantId</th><th>roommateName</th></tr>";
+            echo "<tr><th>Tenant ID</th><th>Roommate Name</th></tr>";
 
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
                 echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>";
@@ -290,13 +240,63 @@
             printTenantDataResult($result);
         }
 
+        function getLeaseField() {
+            global $db_conn;
+
+            $leaseField = $_GET['leaseFieldKeyword'];
+
+            $fieldName;
+            switch ($leaseField) {
+                case 'startDate':
+                    $fieldName = 'Start Date';
+                    break;
+                case 'leaseLength':
+                    $fieldName = 'Lease Length (in months)';
+                    break;
+                case 'rentCost':
+                    $fieldName = 'Rent Cost (in dollars per month)';
+                    break;
+                case 'deposit':
+                    $fieldName = 'Deposit (in dollars)';
+                    break;
+                case 'userId':
+                    $fieldName = 'Property Manager ID';
+                    break;
+                case 'address':
+                    $fieldName = 'Address';
+                case 'tenantId':
+                    $fieldName = 'Tenant ID';
+                    break;
+            }
+
+            if (!isset($fieldName)) {
+                echo "Invalid field name";
+            } else {
+                $result = executePlainSQL("SELECT leaseId, $leaseField FROM Lease");
+                printLeaseFieldResult($result, $fieldName);
+            }  
+        }
+
+        function printLeaseFieldResult($result, $fieldName) {
+            echo "<br>Retrieved data from Lease table:<br>";
+            echo "<table>";
+            echo "<tr><th>Lease ID</th><th>$fieldName</th></tr>";
+
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>";
+            }
+
+            echo "</table>";
+        }
+
         function getLowestPricedUnitsData() {
             global $db_conn;
             $result = executePlainSQL("SELECT propertyType, MIN(rentCost) FROM Property, Lease WHERE Property.address = Lease.address GROUP BY propertyType");
             printLowestPricedUnitsResult($result);
         }
 
-        function printLowestPricedUnitsResult($result) { //prints results from a select statement
+
+        function printLowestPricedUnitsResult($result) {
             echo "<br>Retrieved data from Property and Lease table:<br>";
             echo "<table>";
             echo "<tr><th>Property Type</th><th>Least Expensive Room, in Dollars</th></tr>";
@@ -308,7 +308,27 @@
             echo "</table>";
         }
 
-        function getServiceQueryData() { //prints results from a select statement
+        function getTenantAndRoommatesJoin() {
+            global $db_conn;
+
+            $result = executePlainSQL("SELECT Tenant.tenantId, Tenant.tenantEmail, Tenant.tenantName, Roommates_With_Tenant.roommateName FROM Tenant, Roommates_With_Tenant WHERE Tenant.tenantId = Roommates_With_Tenant.tenantId");
+
+            printTenantAndRoommatesJoin($result);
+        }
+
+        function printTenantAndRoommatesJoin($result) {
+            echo "<br>Retrieved data from the Tenant and Roommates_With_Tenant tables:<br>";
+            echo "<table>";
+            echo "<tr><th>Tenant ID</th><th>Tenant Name</th><th>Tenant Email</th><th>Roommate Name</th></tr>";
+
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr><td>" . $row[0] . "</td><td>" . $row[2] . "</td><td>" . $row[1] . "</td><td>" . $row[3] . "</td></tr>";
+            }
+
+            echo "</table>";
+        }
+
+        function getServiceQueryData() {
             global $db_conn;
 
             $rate = $_GET['serviceMaxPrice'];
@@ -316,13 +336,35 @@
 
             $result = executePlainSQL("SELECT Service_Details.serviceType, rate, serviceWorkerName, serviceWorkerEmail FROM Service_Details, Service_Worker WHERE Service_Details.serviceType = Service_worker.serviceType AND $rate >= rate AND (LOWER(Service_Details.serviceType) LIKE LOWER('%$service%'))");
 
-            getServiceQueryResult($result);
+            printServiceQueryResult($result);
         }
 
-        function getServiceQueryResult($result) { //prints results from a select statement
+        function getLandlordContactInfo() {
+            global $db_conn;
+
+            $tenantID = $_GET['tenantIdKeyword'];
+
+            $result = executePlainSQL("SELECT Landlord.landlordEmail FROM Landlord, Property, Lease WHERE Landlord.customerId = Property.customerId AND Property.address = Lease.address AND tenantId='" . $tenantID . "'");
+
+            printLandlordContactInfoResult($result);
+        }
+
+        function printLandlordContactInfoResult($result) {
+            echo "<br>Retrieved data from Landlord, Property, and Lease tables:<br>";
+            echo "<table>";
+            echo "<tr><th>Landlord Email</th></tr>";
+
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr><td>" . $row[0] . "</td></tr>";
+            }
+
+            echo "</table>";
+        }
+
+        function printServiceQueryResult($result) {
             echo "<br>Retrieved data from Service_Details table:<br>";
             echo "<table>";
-            echo "<tr><th>Service Type</th><th>Rate</th><th>Contact Name</th><th>Contact Email</th></tr>";
+            echo "<tr><th>Service Type</th><th>Rate ($/hr)</th><th>Contact Name</th><th>Contact Email</th></tr>";
 
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
                 echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] . "</td><td>" . $row[3] . "</td></tr>";
@@ -331,10 +373,10 @@
             echo "</table>";
         }
 
-        function printTenantDataResult($result) { //prints results from a select statement
+        function printTenantDataResult($result) {
             echo "<br>Retrieved data from Tenant table:<br>";
             echo "<table>";
-            echo "<tr><th>tenantId</th><th>tenantName</th><th>tenantEmail</th></tr>";
+            echo "<tr><th>Tenant ID</th><th>Tenant Name</th><th>Tenant Email</th></tr>";
 
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
                 echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] , "</td></tr>";
@@ -348,93 +390,6 @@
             getRoommateData();
         }
 
-        // function handleResetRequest() {
-        //     global $db_conn;
-        //     // Drop old table
-        //     executePlainSQL("DROP TABLE demoTable");
-
-        //     // Create new table
-        //     echo "<br> creating new table <br>";
-        //     executePlainSQL("CREATE TABLE demoTable (id int PRIMARY KEY, name char(30))");
-        //     OCICommit($db_conn);
-        // }
-
-        // function handleInsertRequest() {
-        //     global $db_conn;
-
-        //     //Getting the values from user and insert data into the table
-        //     $tuple = array (
-        //         ":bind1" => $_POST['insNo'],
-        //         ":bind2" => $_POST['insName']
-        //     );
-
-        //     $alltuples = array (
-        //         $tuple
-        //     );
-
-        //     executeBoundSQL("insert into demoTable values (:bind1, :bind2)", $alltuples);
-        //     OCICommit($db_conn);
-        // }
-
-        // function handleCountRequest() {
-        //     global $db_conn;
-
-        //     $result = executePlainSQL("SELECT Count(*) FROM demoTable");
-
-        //     if (($row = oci_fetch_row($result)) != false) {
-        //         echo "<br> The number of tuples in demoTable: " . $row[0] . "<br>";
-        //     }
-        // }
-
-        // HANDLE ALL POST ROUTES
-	// A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
-        // function handlePOSTRequest() {
-        //     if (connectToDB()) {
-        //         if (array_key_exists('resetTablesRequest', $_POST)) {
-        //             handleResetRequest();
-        //         } else if (array_key_exists('updateQueryRequest', $_POST)) {
-        //             handleUpdateRequest();
-        //         } else if (array_key_exists('insertQueryRequest', $_POST)) {
-        //             handleInsertRequest();
-        //         } else if (array_key_exists('deleteQueryRequest', $_POST)) {
-        //             handleDeleteRequest();
-        //         }
-
-        //         disconnectFromDB();
-        //     }
-        // }
-
-        // HANDLE ALL GET ROUTES
-	// A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
-        // function handleGETRequest() {
-        //     if (connectToDB()) {
-        //         if (array_key_exists('countTuples', $_GET)) {
-        //             handleCountRequest();
-        //         }
-
-        //         if (array_key_exists('getData', $_GET)) {
-        //             getData();
-        //         } 
-
-        //         // code I added
-        //         if (array_key_exists('getRoommateData', $_GET)) {
-        //             getRoommateData();
-        //         }
-
-        //         disconnectFromDB();
-        //     }
-        // }
-
-		// if (
-        //     isset($_POST['reset']) || 
-        //     isset($_POST['updateSubmit']) || 
-        //     isset($_POST['insertSubmit']) ||
-        //     isset($_POST['deleteSubmit'])) {
-        //     handlePOSTRequest();
-        // } else if (isset($_GET['countTupleRequest']) || isset($_GET['getRoommateDataRequest'])) {
-        //     handleGETRequest();
-        // }
-
         function handleGETRequest() {
             if (connectToDB()) {
                 if (array_key_exists('getRoommateData', $_GET)) {
@@ -445,6 +400,13 @@
                     getLowestPricedUnitsData();
                 } else if (array_key_exists('getServiceQueryRequest', $_GET)) {
                     getServiceQueryData();
+                } else if (array_key_exists('getLeaseFieldSubmit', $_GET)) {
+                    getLeaseField();
+                } else if (array_key_exists('tenantRoommateJoinRequest', $_GET)) {
+                    getTenantAndRoommatesJoin();
+                } 
+                else if (array_key_exists('getLandlordContactInfoSubmit', $_GET)) {
+                    getLandlordContactInfo();
                 }
 
                 disconnectFromDB();
@@ -475,6 +437,13 @@
         } else if (isset($_GET['getLowestPricedUnitsSubmit'])) {
             handleGETRequest();
         } else if (isset($_GET['getServiceQueryRequest'])) {
+            handleGETRequest();
+        } else if (isset($_GET['getLeaseFieldRequest'])) {
+            handleGETRequest();
+        } else if (isset($_GET['tenantRoommateJoinSubmit'])) {
+            handleGETRequest();
+        } 
+        else if (isset($_GET['getLandlordContactInfoRequest'])) {
             handleGETRequest();
         }
 		?>
