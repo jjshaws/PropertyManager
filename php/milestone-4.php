@@ -14,32 +14,12 @@
             <input type="submit" value="Find" name="tenantRoommateJoinSubmit">
         </form>
 
-        <!-- <h2>Evict Roommate</h2>
-        <form method="POST" action="milestone-4.php">
-            <input type="hidden" id="deleteQueryRequest" name="deleteQueryRequest">
-            Tenant ID: <input type="text" name="tenantId">
-            Roommate Name: <input type="text" name="roommateName">
-            <input type="submit" value="Evict" name="deleteSubmit">
-        </form> -->
-
-        <!-- <form method="GET" action="milestone-4.php">
-            <input type="hidden" id="getRoommateDataRequest" name="getRoommateDataRequest">
-            <input type="submit" name="getRoommateData" value="Display Roommate Data">
-        </form> -->
-
-
-
         <h2>Evict Tenant</h2>
         <form method="POST" action="milestone-4.php">
             <input type="hidden" id="deleteTenantQueryRequest" name="deleteTenantQueryRequest">
             Tenant ID: <input type="text" name="tenantId">
             <input type="submit" value="Evict" name="deleteTenantSubmit">
         </form>
-
-        <!-- <form method="GET" action="milestone-4.php">
-            <input type="hidden" id="getTenantAndRoommatesRequest" name="getTenantAndRoommatesRequest">
-            <input type="submit" name="getTenantAndRoommatesData" value="Display Tenant And Roommates">
-        </form> -->
 
         <h2>Get Landlord Contact Information</h2>
         <form method="GET" action="milestone-4.php">
@@ -74,8 +54,6 @@
             <input type="radio" name="leaseFieldKeyword" value="tenantId">Tenant ID
             <input type="submit" value="Submit" name="getLeaseFieldSubmit">
         </form>
-
-
 
         <?php
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
@@ -264,17 +242,14 @@
                     break;
                 case 'address':
                     $fieldName = 'Address';
+                    break;
                 case 'tenantId':
                     $fieldName = 'Tenant ID';
                     break;
             }
 
-            if (!isset($fieldName)) {
-                echo "Invalid field name";
-            } else {
-                $result = executePlainSQL("SELECT leaseId, $leaseField FROM Lease");
-                printLeaseFieldResult($result, $fieldName);
-            }  
+            $result = executePlainSQL("SELECT leaseId, $leaseField FROM Lease");
+            printLeaseFieldResult($result, $fieldName);
         }
 
         function printLeaseFieldResult($result, $fieldName) {
