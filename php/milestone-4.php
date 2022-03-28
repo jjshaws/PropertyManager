@@ -177,22 +177,6 @@
             executePlainSQL("DELETE FROM Tenant WHERE tenantId='" . $tenantId . "'");
             
             OCICommit($db_conn);
-
-            // getTenantAndRoommatesData();
-
-        }
-
-        function handleRequest() {
-            global $db_conn;
-
-            $tenantId = $_POST['tenantId'];
-
-            executePlainSQL("DELETE FROM Tenant WHERE tenantId='" . $tenantId . "'");
-            
-            OCICommit($db_conn);
-
-            getTenantAndRoommatesData();
-
         }
 
         function getRoommateData() {
@@ -309,7 +293,7 @@
             $rate = $_GET['serviceMaxPrice'];
             $service = $_GET['serviceKeyword'];
 
-            $result = executePlainSQL("SELECT Service_Details.serviceType, rate, serviceWorkerName, serviceWorkerEmail FROM Service_Details, Service_Worker WHERE Service_Details.serviceType = Service_worker.serviceType AND $rate >= rate AND (LOWER(Service_Details.serviceType) LIKE LOWER('%$service%'))");
+            $result = executePlainSQL("SELECT Service_Details.serviceType, rate, serviceWorkerName, serviceWorkerEmail FROM Service_Details, Service_Worker WHERE Service_Details.serviceType = Service_Worker.serviceType AND $rate >= rate AND (LOWER(Service_Details.serviceType) LIKE LOWER('%$service%'))");
 
             printServiceQueryResult($result);
         }
