@@ -28,7 +28,7 @@
             <input type="submit" value="Show" name="getLandlordContactInfoSubmit">
         </form>
 
-        <h2>Get Lowest Priced Units By Housing Type</h2>
+        <h2>Find the Property Type With the Lowest Average Rent</h2>
         <form method="GET" action="milestone-4.php">
             <input type="hidden" id="getLowestPricedUnitsRequest" name="getLowestPricedUnitsRequest">
             <input type="submit" value="Show" name="getLowestPricedUnitsSubmit">
@@ -250,7 +250,7 @@
 
         function getLowestPricedUnitsData() {
             global $db_conn;
-            $result = executePlainSQL("SELECT propertyType, MIN(rentCost) FROM Property, Lease WHERE Property.address = Lease.address GROUP BY propertyType");
+            $result = executePlainSQL("WITH Temp(propertyType, avgRent) AS (SELECT propertyType, AVG(rentCost) FROM Property, Lease WHERE Property.address = Lease.address GROUP BY propertyType), TempMinAvg(minAvgRent) AS (SELECT MIN(avgRent) FROM Temp) SELECT Temp.propertyType, Temp.avgRent FROM Temp, TempMinAvg WHERE Temp.avgRent = TempMinAvg.minAvgRent");
             printLowestPricedUnitsResult($result);
         }
 
@@ -258,7 +258,7 @@
         function printLowestPricedUnitsResult($result) {
             echo "<br>Retrieved data from Property and Lease table:<br>";
             echo "<table>";
-            echo "<tr><th>Property Type</th><th>Least Expensive Room, in Dollars</th></tr>";
+            echo "<tr><th>Property Type</th><th>Rent, in Dollars</th></tr>";
 
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
                 echo "<tr><td>" . ($row[0] == 0 ? "Room" : "Unit") . "</td><td>" . $row[1] . "</td></tr>";
