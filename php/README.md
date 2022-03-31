@@ -23,7 +23,7 @@ chmod 755 ~/public_html/PropertyManager/php/databaseSetup.sql
 
 <h2> Populate database (adapted from Tutorial 5)</h2>
 
-5. `cd` into `public_html/PropertyManager/php/` via terminal.
+5. `cd` into `public_html/PropertyManager/php/` via terminal. Type `stty erase ^h` to allow backspaces in sqlplus.
 
 6. Open up sqlplus in this folder and login
 ```
